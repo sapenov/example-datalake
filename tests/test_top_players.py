@@ -1,7 +1,7 @@
 # File: /tests/test_top_players.py
 
 import pytest
-from src.beyond_bets.transforms.top_players_transform import TopPlayersTransform
+from beyond_bets.transforms.top_players_transform import TopPlayersTransform
 from unittest.mock import Mock
 
 def test_top_players_transform(spark, generate_mock_data):

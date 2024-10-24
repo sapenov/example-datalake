@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from pyspark.sql import DataFrame
-from src.beyond_bets.datasets.bets_dataset import BetsDataset
+from beyond_bets.datasets.bets_dataset import BetsDataset
 
 # Base class for transformations, adhering to OCP and SRP
 class BaseTransform(ABC):

@@ -1,1 +1,1 @@
-from beyond_bets.version import __version__
+#from beyond_bets.version import __version__

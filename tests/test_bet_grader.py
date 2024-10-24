@@ -1,5 +1,5 @@
 import pytest
-from src.beyond_bets.transforms.bet_grader_transform import BetGraderTransform
+from beyond_bets.transforms.bet_grader_transform import BetGraderTransform
 from unittest.mock import Mock
 
 def test_bet_grader_transform(spark, generate_mock_data):
