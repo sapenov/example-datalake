@@ -4,15 +4,21 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, TimestampType, DoubleType
 from datetime import datetime, timedelta, date
 import pytest
-import os, random
+import os, random, platform
 from pyspark.sql import functions as F
 
 @pytest.fixture(scope="module")
 def spark():
     # Change this to your own settings
-    os.environ["PYSPARK_PYTHON"] = r"C:\Users\Khazret\PycharmProjects\bbets\venv\Scripts\python.exe"
-    os.environ["PYSPARK_DRIVER_PYTHON"] = r"C:\Users\Khazret\PycharmProjects\bbets\venv\Scripts\python.exe"
-    os.environ["HADOOP_HOME"] = r"C:\hadoop"
+    is_windows = platform.system() == "Windows"
+    if is_windows:
+        os.environ["PYSPARK_PYTHON"] = r"C:\Users\Khazret\PycharmProjects\bbets\venv\Scripts\python.exe"
+        os.environ["PYSPARK_DRIVER_PYTHON"] = r"C:\Users\Khazret\PycharmProjects\bbets\venv\Scripts\python.exe"
+        os.environ["HADOOP_HOME"] = r"C:\hadoop"
+    else:
+        py_exec = os.getenv("PYSPARK_PYTHON", "python")
+        os.environ["PYSPARK_PYTHON"] = py_exec
+        os.environ["PYSPARK_DRIVER_PYTHON"] = py_exec
 
     return SparkSession.builder.master("local[*]").appName("TestApp").getOrCreate()
 
