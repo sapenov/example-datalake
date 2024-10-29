@@ -93,7 +93,38 @@ The refactoring efforts have resulted in a more maintainable, scalable, and flex
 - Improved testability with centralized mock data generation and isolated unit tests.
 - A more organized directory structure that separates core logic from examples and tests, making the project easier to understand, scale, and maintain over time.
 
-## Todo:
+## Misc/Todo:
 
 - Implement Make [all,install, lint, format, test]
 - Conform to PEP, flake8, black, security standards
+
+### Changes in Business Logic
+1. **Refinement of Aggregations**: Altered business logic to refine how aggregations are handled within transformations. For example, clarified definitions for `market_value` and `bet_amount` to differentiate them accurately in the context of bets vs. market aggregations.
+2. **Data Windowing for Temporal Accuracy**: Applied explicit `window` functions for daily and hourly summaries, ensuring that time-based data like `player_hourly` and `market_daily` accurately reflect real-time windows.
+3. **Unified Data Join Logic**: Centralized data joins to reduce redundancy and ensure consistent business rules for linking `player`, `market`, and `bets` data across transformations.
+
+### Changes to Transformation Interfaces/Usage
+1. **Abstract Transformation Class**: Introduced an abstract `BaseTransform` class, standardizing `transform()` methods across various transformations like `PlayerMarketDailyTransform` and `MarketDailyTransform`.
+2. **Simplified Initialization**: Reduced transformation initialization arguments by standardizing `DataAccess` instances, improving reusability and reducing dependencies.
+3. **Flexible Window Parameterization**: Added parameterized window durations (e.g., "1 day", "1 hour") in the transformations, making them more adaptable to varying business requirements.
+
+### API Method that Doesn’t Utilize an API
+1. **Refactor of API-Based Market Dataset**: The `ApiBasedMarketDataset` was modified to fetch data from generated mock data instead of an API. This class could be renamed or refactored to clarify that it relies on local data rather than an actual API call.
+2. **Separation of Concerns**: Suggested a clear separation in naming and structure between `API-based` and `File-based` or `Mock-based` datasets, ensuring the API interface accurately reflects its data source.
+
+### Data Modeling
+1. **Schema Consistency**: Defined consistent data schemas across `BetsDataset` and `MarketDataset`, using structured field names like `market_value`, `total_bets`, and `average_odds` to standardize terminology and ensure clarity in downstream aggregations.
+2. **Temporal Data Separation**: Separated timestamp columns (e.g., `timestamp`, `market_timestamp`) to avoid ambiguity, particularly in joined datasets.
+3. **Normalized Data Aggregation**: Modeled transformations to produce normalized results for `player_id` and `market_id`, supporting clearer downstream analysis and visualizations.
+
+### Further Improvements
+1. **Enhanced Error Handling**: Integrate custom error handling around transformations, especially in `fetch_*` methods, to catch and log any unexpected data issues.
+2. **Efficiency Enhancements**: Experiment with caching frequently used datasets in transformations, such as `market_data` and `bets_data`, to reduce re-computation costs across transformations.
+3. **Automated Data Validation**: Consider adding validation methods to transformations to ensure data quality at each stage (e.g., checking row counts or expected column types).
+
+### Show Statements Inside Transforms
+1. **Production Logging in Place of `.show()`**: In production, replace `.show()` statements with logging summaries or statistics (e.g., row counts, min/max values) to ensure visibility while minimizing performance impacts.
+2. **Sample-based Data Audit**: Capture sample data periodically from within transformations (e.g., `sample(0.1)`) for auditing rather than displaying large datasets, storing results in a secure location for troubleshooting if needed.
+3. **Conditional `.show()` for Non-Production Environments**: Wrap `.show()` calls with environment-based conditions to prevent execution in production, while enabling data visibility in development or testing.
+
+
